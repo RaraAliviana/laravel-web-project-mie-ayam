@@ -70,24 +70,12 @@ class MenuController extends Controller
         return view('menus.show', compact('menu'));
     }
 
-<<<<<<< HEAD:Project/app/Http/Controllers/MenuController.php
-    
-public function edit($id)
-{
-    $menu = Menu::findOrFail($id);
-    $categories = Category::all(); 
-    return view('admin.menus.edit', compact('menu', 'categories'));
-}
-=======
-    // Menampilkan form untuk mengedit menu
-    // Menampilkan form untuk mengedit menu
     public function edit($id)
     {
         $menu = Menu::findOrFail($id);
         $categories = Category::all(); 
         return view('admin.menus.edit', compact('menu', 'categories'));
     }
->>>>>>> fe1cc239b514b597a865cb2683b8cc3ec7415dbf:app/Http/Controllers/MenuController.php
 
     public function update(Request $request, Menu $menu)
     {
