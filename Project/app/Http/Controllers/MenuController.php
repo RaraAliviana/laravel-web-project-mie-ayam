@@ -70,13 +70,12 @@ class MenuController extends Controller
         return view('menus.show', compact('menu'));
     }
 
-    // Menampilkan form untuk mengedit menu
-    // Menampilkan form untuk mengedit menu
+    
 public function edit($id)
 {
     $menu = Menu::findOrFail($id);
     $categories = Category::all(); 
-    return view('menus.edit', compact('menu', 'categories'));
+    return view('admin.menus.edit', compact('menu', 'categories'));
 }
 
     public function update(Request $request, Menu $menu)
@@ -85,20 +84,19 @@ public function edit($id)
             'nama_menu' => 'required|string|max:255',
             'harga' => 'required|numeric|min:0',
             'deskripsi' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id', // Validasi category_id
+            'category_id' => 'required|exists:categories,id', 
         ]);
 
         $menu->update([
             'nama_menu' => $request->nama_menu,
             'harga' => $request->harga,
             'deskripsi' => $request->deskripsi,
-            'category_id' => $request->category_id, // Update category_id
+            'category_id' => $request->category_id, 
         ]);
 
         return redirect()->route('menus.index')->with('success', 'Menu updated successfully.');
     }
 
-    // Menghapus menu dari database
     public function destroy(Menu $menu)
     {
         $menu->delete();
@@ -106,15 +104,14 @@ public function edit($id)
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
     }
 
-    // Soft delete menu (hapus sementara)
     public function softDelete($id)
 {
-    $menu = Menu::findOrFail($id); // Cari menu berdasarkan ID
-    $menu->delete(); // Soft delete menu
+    $menu = Menu::findOrFail($id); 
+    $menu->delete(); 
     return redirect()->back()->with('success', 'Menu berhasil dihapus sementara.');
 }
 
-    // Mengembalikan menu yang dihapus
+    
     public function restore($id)
     {
         $menu = Menu::withTrashed()->find($id);
