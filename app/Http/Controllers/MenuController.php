@@ -72,12 +72,12 @@ class MenuController extends Controller
 
     // Menampilkan form untuk mengedit menu
     // Menampilkan form untuk mengedit menu
-public function edit($id)
-{
-    $menu = Menu::findOrFail($id);
-    $categories = Category::all(); 
-    return view('menus.edit', compact('menu', 'categories'));
-}
+    public function edit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $categories = Category::all(); 
+        return view('admin.menus.edit', compact('menu', 'categories'));
+    }
 
     public function update(Request $request, Menu $menu)
     {
