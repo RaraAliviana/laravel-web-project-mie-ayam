@@ -13,10 +13,9 @@ use Illuminate\Support\Facades\Http;
 
 class MenuController extends Controller
 {
-    // Menampilkan semua menu
     public function index()
     {
-        $menus = Menu::paginate(10); // 10 menu per halaman
+        $menus = Menu::paginate(10); 
         
         if (Auth::user() && Auth::user()->hasRole('admin'))  {
             return view('admin.menus.index', compact('menus'));
@@ -28,25 +27,21 @@ class MenuController extends Controller
         abort(403, 'Access denied.');
     }
     
-
-    // Menampilkan form untuk membuat menu baru
     public function create()
     {
         $categories = Category::all(); 
         return view('admin.menus.create', compact('categories'));
     }
 
-    // Menyimpan menu baru ke database
     public function store(StoreMenuRequest $request)
     {
         DB::beginTransaction();
         try {
-            // Create a new menu with category_id
             Menu::create([
                 'nama_menu' => $request->nama_menu,
                 'harga' => $request->harga,
                 'deskripsi' => $request->deskripsi,
-                'category_id' => $request->category_id, // Menyimpan category_id
+                'category_id' => $request->category_id, 
             ]);
 
             DB::commit();
@@ -58,7 +53,6 @@ class MenuController extends Controller
         return redirect()->route('menus.index')->with('success', 'Menu created successfully.');
     }
 
-    // Menampilkan detail menu
     public function show($id)
     {
         $menu = Menu::find($id);
@@ -132,14 +126,12 @@ class MenuController extends Controller
         return redirect()->back()->with('error', 'Menu not found.');
     }
 
-    // Menampilkan semua menu termasuk yang dihapus
     public function indexWithTrashed()
     {
         $menus = Menu::withTrashed()->get();
     return view('admin.menus.withTrashed', compact('menus'));
     }
 
-    // Menampilkan hanya menu yang dihapus
     public function onlyTrashed()
     {
         $menus = Menu::onlyTrashed()->get();
