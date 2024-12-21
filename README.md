@@ -26,7 +26,7 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di mesin lokal Anda:
 1. **Clone Repository:**
 
    ```bash
-   git clone https://github.com/username/mie-ayam-gapuro.git
+   git clone https://github.com/username/mie-ayam-gapuro.git](https://github.com/Imnotrar/laravel-web-project-mie-ayam.git
    ```
 
 2. **Masuk ke Direktori Proyek:**
