@@ -14,79 +14,72 @@ new #[Layout('layouts.guest')] class extends Component
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $pin = '';
 
-    /**
-     * Handle an incoming registration request.
-     */
-    public function register(): void
+    public function register()
     {
-        $validated = $this->validate([
+        $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'pin' => ['required', 'digits:6'],
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        $user = User::create([
+            'name' => $this->name,
+            'email' => $this->email,
+            'password' => Hash::make($this->password),
+            'pin' => Hash::make($this->pin),
+        ]);
 
-        event(new Registered($user = User::create($validated)));
+        event(new Registered($user));
 
         Auth::login($user);
 
-        if ($user->role === 'admin') {
-            $this->redirect(route('admin.dashboard', absolute: false), navigate: true);
-        } else {
-            $this->redirect(route('user.dashboard', absolute: false), navigate: true);
-        }
+        return redirect()->intended(route('dashboard', absolute: false));
     }
-}; ?>
+};
+?>
 
-<div>
-    <form wire:submit="register">
-        <!-- Name -->
+<div class="max-w-md mx-auto p-6 bg-white shadow rounded">
+    <h2 class="text-2xl font-semibold text-center mb-6">Daftar Akun</h2>
+
+    <form wire:submit="register" class="space-y-4">
+
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label class="block mb-1 text-sm font-medium">Nama</label>
+            <input wire:model="name" type="text" class="form-input w-full" placeholder="Nama lengkap">
+            @error('name') <small class="text-red-500">{{ $message }}</small> @enderror
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div>
+            <label class="block mb-1 text-sm font-medium">Email</label>
+            <input wire:model="email" type="email" class="form-input w-full" placeholder="Email aktif">
+            @error('email') <small class="text-red-500">{{ $message }}</small> @enderror
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <label class="block mb-1 text-sm font-medium">Password</label>
+            <input wire:model="password" type="password" class="form-input w-full" placeholder="Password">
+            @error('password') <small class="text-red-500">{{ $message }}</small> @enderror
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div>
+            <label class="block mb-1 text-sm font-medium">Konfirmasi Password</label>
+            <input wire:model="password_confirmation" type="password" class="form-input w-full" placeholder="Ulangi password">
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}" wire:navigate>
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <div>
+            <label class="block mb-1 text-sm font-medium">PIN (6 Angka)</label>
+            <input wire:model="pin" type="password" maxlength="6" inputmode="numeric" class="form-input w-full" placeholder="******">
+            @error('pin') <small class="text-red-500">{{ $message }}</small> @enderror
         </div>
+
+        <button type="submit" class="btn-primary w-full py-2">Daftar</button>
     </form>
+
+    <p class="text-center mt-4 text-sm">
+        Sudah punya akun?
+        <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Masuk</a>
+    </p>
 </div>

@@ -9,6 +9,7 @@ use App\Http\Controllers\StoreProfileController;
 use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -50,13 +51,8 @@ Route::put('/store/{store}', [StoreProfileController::class, 'update'])->name('s
 
 // Admin routes
 Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
-    Route::resource('roles', RoleController::class);
-    Route::get('roles', [RoleController::class, 'index'])->name('admin.roles.index');
-    Route::get('roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
-    Route::post('roles', [RoleController::class, 'store'])->name('admin.roles.store');
-    Route::get('roles/{id}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
-    Route::put('roles/{id}', [RoleController::class, 'update'])->name('admin.roles.update');
-    Route::delete('roles/{id}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+    Route::get('/user-roles', [UserRoleController::class, 'index'])->name('admin.roles.index');
+    Route::put('/users/{id}/role', [UserRoleController::class, 'updateUserRole'])->name('admin.roles.updateUserRole');
 
     Route::get('menus/with-trashed', [MenuController::class, 'indexWithTrashed'])->name('admin.menus.withtrashed');
     Route::get('menus/only-trashed', [MenuController::class, 'onlyTrashed'])->name('admin.menus.onlyTrashed');

@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
-use Spatie\Permission\Models\Role;
 
 class LoginForm extends Form
 {
@@ -22,16 +21,10 @@ class LoginForm extends Form
     #[Validate('boolean')]
     public bool $remember = false;
 
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        // Coba login dengan kredensial yang diberikan
         if (! Auth::attempt($this->only(['email', 'password']), $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
@@ -40,21 +33,9 @@ class LoginForm extends Form
             ]);
         }
 
-        $user = Auth::user(); // Dapatkan pengguna yang login
-
-if (!$user->hasAnyRole(['admin', 'user'])) { // Periksa role dengan Spatie
-    Auth::logout(); // Logout pengguna jika tidak valid
-    throw ValidationException::withMessages([
-        'form.email' => 'Access denied: Invalid role.',
-    ]);
-}
-
         RateLimiter::clear($this->throttleKey());
     }
 
-    /**
-     * Ensure the authentication request is not rate limited.
-     */
     protected function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
@@ -73,9 +54,6 @@ if (!$user->hasAnyRole(['admin', 'user'])) { // Periksa role dengan Spatie
         ]);
     }
 
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
     protected function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());

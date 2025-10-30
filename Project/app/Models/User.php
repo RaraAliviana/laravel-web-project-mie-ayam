@@ -22,7 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id', // Pastikan role_id dapat diisi secara massal
+        'role_id',
+        'pin', // Pastikan role_id dapat diisi secara massal
     ];
 
     /**
