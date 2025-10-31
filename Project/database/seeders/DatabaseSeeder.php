@@ -6,54 +6,61 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Helpers\EncryptHelper;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Panggil seeder lain jika diperlukan
         $this->call([
             MenuSeeder::class,
         ]);
 
-        // Hapus user lama dengan email tertentu jika ada
         User::where('email', 'admin@example.com')->delete();
 
-        // Membuat roles jika belum ada
         $adminRole = Role::firstOrCreate(['name' => 'admin'], ['guard_name' => 'web']);
         $userRole = Role::firstOrCreate(['name' => 'user'], ['guard_name' => 'web']);
 
-        // Membuat permissions jika belum ada
         $permissions = [
             'view posts',
             'create posts',
+            'edit posts',
             'delete posts',
+            'manage users',
+            'view dashboard',
         ];
 
         foreach ($permissions as $permission) {
             Permission::firstOrCreate(['name' => $permission], ['guard_name' => 'web']);
         }
 
-        // Memberikan permissions ke admin role
-        $adminRole->syncPermissions(['view posts', 'create posts', 'delete posts']);
+        $adminRole->syncPermissions($permissions);
+        $userRole->syncPermissions(['view posts', 'view dashboard']);
 
-        // Memberikan permissions ke user role (hanya 'view posts')
-        $userRole->syncPermissions(['view posts']);
-
-        // Membuat user baru
-        $user = User::create([
+        // Membuat user admin - event akan assign role admin
+        User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
+            'password' => EncryptHelper::encryptTwoLayer('password'),
+            'pin' => EncryptHelper::encryptTwoLayer('123456'),
         ]);
 
-        // Assign role 'admin' dan update role_id
-        $user->assignRole($adminRole->name);
-        $user->update(['role_id' => $adminRole->id]);
+        // Membuat user biasa - event akan assign role user
+        User::create([
+            'name' => 'Regular User',
+            'email' => 'user@example.com',
+            'password' => EncryptHelper::encryptTwoLayer('password123'),
+            'pin' => EncryptHelper::encryptTwoLayer('654321'),
+        ]);
 
-        
+        $this->command->info('Admin User created:');
+        $this->command->info('Email: admin@example.com');
+        $this->command->info('Password: password');
+        $this->command->info('PIN: 123456');
+        $this->command->info('');
+        $this->command->info('Regular User created:');
+        $this->command->info('Email: user@example.com');
+        $this->command->info('Password: password123');
+        $this->command->info('PIN: 654321');
     }
 }

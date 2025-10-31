@@ -30,16 +30,15 @@ new #[Layout('layouts.guest')] class extends Component
             ]);
         }
     }
-}; ?>
+};
+?>
 
 <div>
-    <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form wire:submit="login">
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
+            <x-input-label for="email" :value="('Email')" />
             <x-text-input
                 wire:model="form.email"
                 id="email"
@@ -53,9 +52,8 @@ new #[Layout('layouts.guest')] class extends Component
             <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="('Password')" />
             <x-text-input
                 wire:model="form.password"
                 id="password"
@@ -68,7 +66,6 @@ new #[Layout('layouts.guest')] class extends Component
             <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember" class="inline-flex items-center">
                 <input

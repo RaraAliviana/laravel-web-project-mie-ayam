@@ -42,9 +42,9 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed', // Gunakan `hashed` untuk hashing otomatis
-    ];
+    'email_verified_at' => 'datetime',
+    // Hapus atau ubah bagian ini agar password tidak di-hash otomatis
+];
 
     /**
      * Booted method to handle user events.

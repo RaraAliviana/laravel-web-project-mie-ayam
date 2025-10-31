@@ -1,12 +1,9 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Helpers\EncryptHelper;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -25,16 +22,20 @@ new #[Layout('layouts.guest')] class extends Component
             'pin' => ['required', 'digits:6'],
         ]);
 
-        $user = User::create([
+        // 🔐 Enkripsi 2 lapis
+        $encryptedPassword = EncryptHelper::encryptTwoLayer($this->password);
+        $encryptedPin = EncryptHelper::encryptTwoLayer($this->pin);
+
+        $user = \App\Models\User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'pin' => Hash::make($this->pin),
+            'password' => $encryptedPassword,
+            'pin' => $encryptedPin,
         ]);
 
-        event(new Registered($user));
+        event(new \Illuminate\Auth\Events\Registered($user));
 
-        Auth::login($user);
+        \Illuminate\Support\Facades\Auth::login($user);
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
@@ -45,7 +46,6 @@ new #[Layout('layouts.guest')] class extends Component
     <h2 class="text-2xl font-semibold text-center mb-6">Daftar Akun</h2>
 
     <form wire:submit="register" class="space-y-4">
-
         <div>
             <label class="block mb-1 text-sm font-medium">Nama</label>
             <input wire:model="name" type="text" class="form-input w-full" placeholder="Nama lengkap">
@@ -71,7 +71,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         <div>
             <label class="block mb-1 text-sm font-medium">PIN (6 Angka)</label>
-            <input wire:model="pin" type="password" maxlength="6" inputmode="numeric" class="form-input w-full" placeholder="******">
+            <input wire:model="pin" type="password" maxlength="6" inputmode="numeric" class="form-input w-full" placeholder="">
             @error('pin') <small class="text-red-500">{{ $message }}</small> @enderror
         </div>
 
