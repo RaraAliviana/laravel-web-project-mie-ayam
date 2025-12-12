@@ -33,8 +33,10 @@
     },
     
 "files": [
-    "app/Helpers/EncryptHelper.php"
+    "app/Helpers/EncryptHelper.php",
+    "app/Helpers/AESEncryptor.php"
 ]
+
 },
 
     "autoload-dev": {

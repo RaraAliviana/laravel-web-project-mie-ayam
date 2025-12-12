@@ -10,6 +10,7 @@ use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\UserRoleController;
+use App\Livewire\Auth\Login;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,12 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
+
+Route::get('/login', Login::class);
+
+
+
+    
 
 
 require __DIR__.'/auth.php';

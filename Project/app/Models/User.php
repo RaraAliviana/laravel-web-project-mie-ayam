@@ -9,6 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role; // Impor model Role
 use Spatie\Permission\Traits\HasRoles;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -16,8 +17,9 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
-     */
+    * @var list<string>
+    */
+    
     protected $fillable = [
         'name',
         'email',
@@ -44,7 +46,13 @@ class User extends Authenticatable
     protected $casts = [
     'email_verified_at' => 'datetime',
     // Hapus atau ubah bagian ini agar password tidak di-hash otomatis
+
+    
 ];
+public function role()
+{
+    return $this->belongsTo(Role::class, 'role_id');
+}
 
     /**
      * Booted method to handle user events.

@@ -4,6 +4,7 @@ use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use App\Helpers\EncryptHelper;
+use App\Helpers\AESEncryptor;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -23,12 +24,13 @@ new #[Layout('layouts.guest')] class extends Component
         ]);
 
         // 🔐 Enkripsi 2 lapis
-        $encryptedPassword = EncryptHelper::encryptTwoLayer($this->password);
+        $encryptedEmail = AESEncryptor::encrypt($this->email);
+        $encryptedPassword = AESEncryptor::encrypt($this->password);
         $encryptedPin = EncryptHelper::encryptTwoLayer($this->pin);
 
         $user = \App\Models\User::create([
             'name' => $this->name,
-            'email' => $this->email,
+            'email' => $encryptedEmail,
             'password' => $encryptedPassword,
             'pin' => $encryptedPin,
         ]);
@@ -37,7 +39,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         \Illuminate\Support\Facades\Auth::login($user);
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('user.dashboard', absolute: false));
     }
 };
 ?>
