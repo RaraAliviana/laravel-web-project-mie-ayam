@@ -2,22 +2,53 @@
 
 ## Deskripsi Proyek
 
-Mie Ayam Gapuro adalah sebuah aplikasi berbasis web yang dirancang untuk membantu mengelola bisnis kuliner, khususnya penjualan mie ayam. Aplikasi ini menyediakan fitur untuk mengelola menu, melakukan pemesanan, dan mengatur paket hemat. Sistem ini juga mendukung otentikasi pengguna untuk keamanan dan manajemen data yang lebih baik.
+**Mie Ayam Gapuro** adalah aplikasi web berbasis **Laravel 11** yang digunakan untuk mengelola bisnis kuliner mie ayam.  
+Aplikasi ini mendukung manajemen menu, pemesanan, paket hemat, serta dilengkapi dengan mekanisme keamanan data berbasis Blockchain Ledger (Integrity Log) untuk mendeteksi perubahan data ilegal (tampering).
+---
 
 ## Fitur Utama
 
-- **Manajemen Menu:** Tambah, ubah, dan hapus menu mie ayam.
-- **Manajemen Pemesanan:** Mengelola daftar pemesanan dari pelanggan.
-- **Paket Hemat:** Fitur untuk menawarkan paket hemat kepada pelanggan.
-- **Otentikasi Pengguna:** Sistem login menggunakan Laravel Sanctum.
-- **Dashboard Pengguna:** Antarmuka untuk mengelola data dengan mudah.
+### 🔹 Manajemen Data
+- Manajemen Menu
+- Manajemen Pemesanan
+- Manajemen Paket Hemat
+- Manajemen Kategori
+
+### 🔹 Sistem Pengguna
+- Otentikasi Login & Role (Admin & User)
+- Dashboard Admin & User
+
+### 🔹 Keamanan & Integrity System
+- **Blockchain-like Integrity Log**
+- Otomatis mencatat perubahan data menggunakan **Observer**
+- Hash SHA-256 + Previous Hash
+- Fitur **System Integrity Checker** untuk mendeteksi manipulasi data database
+---
+
+## 🛡️ Mekanisme Blockchain Integrity (Fitur Khusus)
+
+Sistem ini menggunakan konsep **Blockchain Ledger sederhana** dengan:
+- **IntegrityLog Table**
+- **Hashing SHA-256**
+- **Previous Hash (Chain Validation)**
+- **Observer pada Model Pemesanan**
+
+### Alur Kerja:
+1. Data dibuat / diubah (create, update, delete)
+2. Observer aktif otomatis
+3. Data dicatat ke tabel `integrity_logs`
+4. Sistem membuat hash + previous hash
+5. Admin dapat mengecek status valid / tampered
+---
 
 ## Teknologi yang Digunakan
 
 - **Framework:** Laravel 11
 - **Frontend:** Bootstrap 5
 - **Database:** MySQL
+- **Security Concept:** Observer + Hashing (Blockchain-like)
 - **API Testing:** Postman
+---
 
 ## Instalasi
 
