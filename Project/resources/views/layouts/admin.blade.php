@@ -49,6 +49,7 @@
                     <a href="{{ route('admin.pemesanans.index') }}" class="list-group-item">Pemesanan</a>
                     <a href="{{ route('admin.roles.index') }}" class="list-group-item">Roles User</a>
                     <a href="{{ route('admin.store.profile') }}" class="list-group-item">Store Profile</a>
+                    <a href="{{ route('admin.integrity.index') }}" class="list-group-item">integrity check</a>
                 </div>
             </div>
 

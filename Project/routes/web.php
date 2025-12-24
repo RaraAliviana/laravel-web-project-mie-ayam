@@ -10,6 +10,7 @@ use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\IntegrityController;
 use App\Livewire\Auth\Login;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -94,6 +95,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/edit', [UserController::class, 'edit'])->name('user.profile.edit');  // Define this route
     Route::get('admin/store/create', [StoreProfileController::class, 'create'])->name('admin.store.create');
     Route::post('admin/store/store', [StoreProfileController::class, 'store'])->name('admin.store.store');
+    Route::get('/admin/integrity', [IntegrityController::class, 'index'])
+     ->name('admin.integrity.index');
+
 });
 
 Route::prefix('user')->middleware(['auth', 'verified'])->group(function () {
